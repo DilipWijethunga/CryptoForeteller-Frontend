@@ -38,9 +38,9 @@ const MarketTable = () => {
                         <thead>
                         <tr>
                             <th className="market-no text-center">
-                                <span className="nobr">Name</span>
+                                <span className="nobr">Symbol</span>
                             </th>
-                            <th className="market-symbol text-center">Symbol</th>
+                            <th className="market-symbol text-center">Name</th>
                             <th className="market-prize text-center">
                                 <span className="nobr">USD Price</span>
                             </th>
