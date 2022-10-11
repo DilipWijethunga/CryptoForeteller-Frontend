@@ -57,7 +57,9 @@ function NewsList(props) {
     const onClickNewsDelete = (id) => {
             setShow(true);
             handleDelete(id);
-            window.location.reload();
+            setTimeout(() => {
+                window.location.reload();
+            }, 2000);
     }
 
     return (
