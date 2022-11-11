@@ -6,6 +6,7 @@ import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import {useLocation} from "react-router-dom";
 import CurrencyDetailsService from "../../services/CurrencyDetailsService";
+import CommonAuthCheck from "../../services/CommonAuthCheck";
 
 // TODO: Validating registration form fields
 const requiredField = data => {
@@ -65,7 +66,7 @@ function EditCoin() {
 
         CurrencyDetailsService.updateCurrency(data)
             .then(response => {
-                setMessage(response.data);
+                setMessage(response.data.data);
                 setLoading(false);
                 window.location.replace("/coins-list")
             })
@@ -175,4 +176,4 @@ function EditCoin() {
     );
 }
 
-export default EditCoin;
+export default CommonAuthCheck(EditCoin);

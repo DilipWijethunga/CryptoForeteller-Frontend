@@ -4,6 +4,7 @@ import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import CurrencyDetailsService from "../../services/CurrencyDetailsService";
 import Modal from "react-bootstrap/Modal";
+import CommonAuthCheck from "../../services/CommonAuthCheck";
 
 function CoinsList(props) {
     const divBox = {
@@ -33,9 +34,7 @@ function CoinsList(props) {
     const handleDelete = async (id) => {
         await CurrencyDetailsService.deleteCurrencyById(id)
             .then(response => response.data)
-            .then((data) => {
-                console.log(data)
-            }).catch(error => {
+            .catch(error => {
                 console.log(error.message);
             });
     }
@@ -77,6 +76,7 @@ function CoinsList(props) {
                 </Modal.Footer>
             </Modal>
             <div style={divBox}/>
+            <h2 className="text-center"><mark>All Coins Details</mark></h2>
             <Container>
                 <div>
                     <Link to={`/add-coin`} className={'btn btn-success text-white'}>Add New Coin</Link>
@@ -113,7 +113,7 @@ function CoinsList(props) {
                                     <td>{coin.name}</td>
                                     <td>{coin.code}</td>
                                     <td>{coin.description}</td>
-                                    <td>{coin.image}</td>
+                                    <td>{(coin.image).substring(0,30)}...</td>
                                     <td>
                                         <Link to={{
                                             pathname: process.env.PUBLIC_URL + '/coin-edit',
@@ -125,10 +125,10 @@ function CoinsList(props) {
                                                 coinImagePath: coin.image
                                             }
                                         }}
-                                              className={'btn btn-primary'}>Edit</Link>
+                                              className={'btn btn-primary text-white'}>Edit</Link>
                                     </td>
                                     <td>
-                                        <Link onClick={()=> handleShow(coin._id.$oid)} className={'btn btn-danger'}>Delete</Link>
+                                        <Link onClick={()=> handleShow(coin._id.$oid)} className={'btn btn-danger text-white'}>Delete</Link>
                                     </td>
                                 </tr>
                             ))
@@ -141,4 +141,4 @@ function CoinsList(props) {
     );
 }
 
-export default CoinsList;
+export default CommonAuthCheck(CoinsList);

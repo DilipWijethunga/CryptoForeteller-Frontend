@@ -1,10 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import {Card, Col, Image, Row} from "react-bootstrap";
 import CurrencyService from "../../services/CurrencyService";
+import CoinService from "../../services/CoinService";
+import fileDownload from "js-file-download";
 import ScoreMeter from "./ScoreMeter";
 
 
-const ForetellerDetail = ({title, coinImage, code, priceData, volumeData, marketCapData}) => {
+const ForetellerDetail = ({title, coinImage, code, desciption, priceData, volumeData, marketCapData}) => {
 
     const [sentimentData, setSentimentData] = useState([]);
 
@@ -14,13 +16,32 @@ const ForetellerDetail = ({title, coinImage, code, priceData, volumeData, market
                 .then(response => response.data)
                 .then((data) => {
                     setSentimentData(data);
-                    console.log(data)
                 })
                 .catch(error => console.log(error.message));
         }
 
         dataFetch();
     }, []);
+
+    const handleDownload = (e) => {
+        e.preventDefault();
+
+        // Current Date
+        const date = new Date();
+        const format_date = date.toISOString().substring(0, 10);
+        const file_name = code + '_' + format_date + '.csv'
+
+        CoinService.getSavedDataCSVByCoinName(code)
+            .then(res => {
+                fileDownload(res.data, file_name);
+            }).catch(error => console.log(error.message));
+    };
+
+    const parentDiv = {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+    }
 
     return (
         <div className="dg__software__area bg--white pt-5">
@@ -29,8 +50,10 @@ const ForetellerDetail = ({title, coinImage, code, priceData, volumeData, market
 
                     <div className="col-lg-12 col-md-12 col-sm-12 col-12">
                         <div className="dg__software__inner">
+                            {/* COIN NAME */}
                             <h1 className='text-center'>{title}</h1>
 
+                            {/* COIN IMAGE */}
                             <div className='py-4'>
                                 <Image src={coinImage}
                                        className='mx-auto d-block'
@@ -40,6 +63,7 @@ const ForetellerDetail = ({title, coinImage, code, priceData, volumeData, market
                             </div>
 
                             <Row>
+                                {/* COIN DATA TABLE */}
                                 <Col className='pt-3 text-left col-9'>
                                     <Row>
                                         <Col>
@@ -114,15 +138,19 @@ const ForetellerDetail = ({title, coinImage, code, priceData, volumeData, market
                                         </Col>
                                     </Row>
                                 </Col>
+
+                                {/* SENTIMENT DATA */}
                                 <Col className=' col-3'>
-                                    <div style={{paddingTop:'0.5em'}}>
+                                    <div style={{paddingTop: '0.5em'}}>
                                         {sentimentData ? (
                                             <div>
                                                 {sentimentData.sentiment === 'Positive' ? (
                                                     <Card
                                                         bg='success'
                                                     >
-                                                        <Card.Header className='text-center text-white text-uppercase font-weight-bold'>Sentiment Analysis</Card.Header>
+                                                        <Card.Header
+                                                            className='text-center text-white text-uppercase font-weight-bold'>Sentiment
+                                                            Analysis</Card.Header>
                                                         <Card.Body>
                                                             <div className='text-center text-white'>
                                                                 <h4 className='text-white'>Status: {sentimentData.sentiment}</h4>
@@ -134,7 +162,9 @@ const ForetellerDetail = ({title, coinImage, code, priceData, volumeData, market
                                                     <Card
                                                         bg='danger'
                                                     >
-                                                        <Card.Header className='text-center text-white text-uppercase font-weight-bold'>Sentiment Analysis</Card.Header>
+                                                        <Card.Header
+                                                            className='text-center text-white text-uppercase font-weight-bold'>Sentiment
+                                                            Analysis</Card.Header>
                                                         <Card.Body>
                                                             <div className='text-center text-white'>
                                                                 <h4 className='text-white'>Status: {sentimentData.sentiment}</h4>
@@ -149,7 +179,8 @@ const ForetellerDetail = ({title, coinImage, code, priceData, volumeData, market
                                                 <Card
                                                     bg='primary'
                                                 >
-                                                    <Card.Header className='text-center text-white text-uppercase font-weight-bold'></Card.Header>
+                                                    <Card.Header
+                                                        className='text-center text-white text-uppercase font-weight-bold'></Card.Header>
                                                     <Card.Body>
                                                         <Card.Title></Card.Title>
                                                         <div className='text-center text-white'>
@@ -167,6 +198,25 @@ const ForetellerDetail = ({title, coinImage, code, priceData, volumeData, market
                         </div>
                     </div>
 
+                    {/* COIN DESCRIPTION */}
+                    <div className="col-lg-9 col-md-9 col-sm-9 col-9 pt--30">
+                        <div>
+                            <p>{desciption}</p>
+                        </div>
+                    </div>
+
+                    {/* HISTORY DATA DOWNLOAD */}
+                    <div className="col-lg-3 col-md-3 col-sm-3 col-3 pt--30">
+                        <div style={parentDiv}>
+                            <h3 className={'text-uppercase'}>History Data</h3>
+                        </div>
+
+                        <div style={parentDiv}>
+                            <button onClick={handleDownload} className="btn btn-success">Download</button>
+                        </div>
+                    </div>
+
+                    {/* SCORE METERS */}
                     <div>
                         <ScoreMeter
                             priceScore={priceData.score}
@@ -175,6 +225,14 @@ const ForetellerDetail = ({title, coinImage, code, priceData, volumeData, market
                             sentimentScore={sentimentData.score}/>
                     </div>
                 </div>
+
+                {/*<div style={parentDiv} className={'pt--40'}>*/}
+                {/*    <h3 className={'text-uppercase'}>History Data</h3>*/}
+                {/*</div>*/}
+
+                {/*<div style={parentDiv}>*/}
+                {/*    <button onClick={handleDownload} className="btn btn-success">Download</button>*/}
+                {/*</div>*/}
             </div>
         </div>
     );

@@ -3,7 +3,7 @@ import MetaTags from "react-meta-tags";
 import LayoutTwo from "../layouts/LayoutTwo";
 import Breadcrumb from "../components/breadcrumbs/Breadcrumb";
 import MarketTable from "../containers/market-tables/MarketTable";
-import ForetellerCard from "../containers/currency-forteller/ForetellerCard";
+// import ForetellerCard from "../containers/currency-forteller/ForetellerCard";
 
 const AboutBitcoin = () => {
     return (
@@ -24,7 +24,9 @@ const AboutBitcoin = () => {
                 <MarketTable/>
 
                 {/*Foreteller Cards List*/}
-                <ForetellerCard/>
+                {/*<ForetellerCard/>*/}
+
+                <div className={'pb--60'}/>
 
             </LayoutTwo>
         </Fragment>

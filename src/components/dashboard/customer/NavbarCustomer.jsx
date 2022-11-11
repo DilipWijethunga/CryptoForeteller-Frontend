@@ -1,17 +1,13 @@
 import React, {useState} from 'react';
-import * as FaIcons from 'react-icons/fa';
 import {Link} from 'react-router-dom';
-import './Navbar.css';
-import {IconContext} from 'react-icons';
 import {Nav} from "react-bootstrap";
+import {IconContext} from 'react-icons';
+
 import UserService from "../../../services/UserService";
 import Logo from "../../header/Logo";
+import './NavbarCustomer.css';
 
-function Navbar() {
-    const [sidebar, setSidebar] = useState(false);
-
-    const showSidebar = () => setSidebar(!sidebar);
-
+function NavbarCustomer(props) {
     return (
         <>
             <IconContext.Provider value={{color: '#fff'}}>
@@ -23,17 +19,11 @@ function Navbar() {
                     </Link>
                     <Nav>
                         <li className="nav-item">
-                            <Link to={'/admin-dashboard'} className={'nav-link text-white'}> Dashboard </Link>
+                            <Link to={'/customer-dashboard'} className={'nav-link text-white'}> Dashboard </Link>
                         </li>
-                        <li className="nav-item">
-                            <Link to={'/news-list'} className={'nav-link text-white'}> News </Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link to={'/coins-list'} className={'nav-link text-white'}> Coins </Link>
-                        </li>
-                        <li className="nav-item">
-                            <Link to={'/users-list'} className={'nav-link text-white'}> Users </Link>
-                        </li>
+                        {/*<li className="nav-item">*/}
+                        {/*    <Link to={'/customer-profile'} className={'nav-link text-white'}> Profile </Link>*/}
+                        {/*</li>*/}
                         <li className="nav-item">
                             <Link className={'nav-link text-white'} onClick={UserService.logout}> Logout </Link>
                         </li>
@@ -45,4 +35,4 @@ function Navbar() {
     );
 }
 
-export default Navbar;
+export default NavbarCustomer;

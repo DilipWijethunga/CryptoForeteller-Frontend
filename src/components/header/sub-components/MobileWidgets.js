@@ -18,16 +18,16 @@ const MobileWidgets = () => {
           <ul className="headerContactInfoList">
             <li>
               <FaUserAlt />{" "}
-              <Link to={process.env.PUBLIC_URL + "/login-register"}>
+              <Link to={process.env.PUBLIC_URL + "/login"}>
                 Login / Register{" "}
               </Link>
             </li>
             <li>
-              <FaPhone /> <a href="tel://12452456012">(1245) 2456 012 </a>
+              <FaPhone /> <a href="tel://12452456012">+94 7777 777 77</a>
             </li>
             <li>
               <FaRegEnvelope />{" "}
-              <a href="mailto:info@yourdomain.com">info@yourdomain.com</a>
+              <a href="mailto:info@yourdomain.com">crypotforeteller@gmail.com</a>
             </li>
           </ul>
         </div>
