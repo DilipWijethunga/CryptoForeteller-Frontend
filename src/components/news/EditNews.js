@@ -6,6 +6,7 @@ import Navbar from "../dashboard/sidebar/Navbar";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import NewsService from "../../services/NewsService";
+import CommonAuthCheck from "../../services/CommonAuthCheck";
 
 
 // TODO: Validating registration form fields
@@ -66,7 +67,7 @@ function EditNews(props) {
 
         NewsService.updateNews(data)
             .then(response => {
-                setMessage(response.data);
+                setMessage(response.data.data);
                 setLoading(false);
 
                 window.location.replace("/news-list");
@@ -174,4 +175,4 @@ function EditNews(props) {
     );
 }
 
-export default EditNews;
+export default CommonAuthCheck(EditNews);

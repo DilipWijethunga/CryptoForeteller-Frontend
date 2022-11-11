@@ -1,23 +1,36 @@
 import React, {useEffect, useState} from "react";
 import NewsService from "../../../services/NewsService";
-// import ChartistGraph from "react-chartist";
-// react-bootstrap components
 import {
-    Badge,
-    Button,
     Card,
-    Navbar,
-    Nav,
-    Table,
     Container,
     Row,
     Col,
-    Form,
-    OverlayTrigger,
-    Tooltip,
 } from "react-bootstrap";
-import {Link} from "react-router-dom";
 import CurrencyDetailsService from "../../../services/CurrencyDetailsService";
+
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend,
+    ArcElement
+} from 'chart.js';
+import {Bar, Pie} from 'react-chartjs-2';
+import MarketService from "../../../services/MarketService";
+
+
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend,
+    ArcElement
+);
 
 function Dashboard() {
 
@@ -27,14 +40,72 @@ function Dashboard() {
     const divSmallBox = {
         height: '20px'
     }
+    const divForPieChart = {
+        textAlign: "-webkit-center"
+    }
 
-
-    let countNews = 1;
-    let countCoins = 1;
     const [newsList, setNewsList] = useState([]);
     const [coinsList, setCardData] = useState([]);
     const [countNewsList, setCountNewsList] = useState([]);
     const [countCoinsList, setCountCoinsList] = useState([]);
+    const [marketData, setMarketData] = useState([]);
+
+    const options = {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'top',
+            },
+            title: {
+                display: true,
+                text: 'Monthly Average News',
+            },
+        },
+    };
+
+    const labels = ['July', 'August', 'September', 'October', 'November', 'December'];
+
+    const news = {
+        newsData: [1, 5, 6, 8, newsList.length]
+    }
+
+    const dataForNews = {
+        labels,
+        datasets: [
+            {
+                label: 'News',
+                data: news.newsData,
+                backgroundColor: 'rgba(99,200,255,0.5)',
+            }
+        ],
+    };
+
+    const dataForCoins = {
+        labels: marketData.map((coin) => coin.name),
+        datasets: [
+            {
+                label: 'Coins Market Cap',
+                data: marketData.map((coin) => coin.market_data.current_price.usd),
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)',
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)',
+                ],
+                borderWidth: 1,
+            },
+        ],
+    };
 
     useEffect(() => {
         async function dataFetchNews() {
@@ -55,8 +126,18 @@ function Dashboard() {
                 }).catch(error => console.log(error.message));
         }
 
+        async function dataFetchMarket() {
+            MarketService.getCoinDta()
+                .then(response => response.data)
+                .then((data) => {
+                    let newArray = data.slice(0, 5);
+                    setMarketData(newArray);
+                }).catch(error => console.log(error.message));
+        }
+
         dataFetchNews();
         dataFetchCoins();
+        dataFetchMarket();
     }, []);
 
 
@@ -72,7 +153,8 @@ function Dashboard() {
                                     <Col>
                                         <div className="numbers">
                                             <p className="card-category color--white text-center">Total Coins</p>
-                                            <Card.Title as="h1" className={"color--white text-center"}>{countCoinsList.length}</Card.Title>
+                                            <Card.Title as="h1"
+                                                        className={"color--white text-center"}>{countCoinsList.length}</Card.Title>
                                         </div>
                                     </Col>
                                 </Row>
@@ -93,7 +175,8 @@ function Dashboard() {
                                     <Col>
                                         <div className="numbers">
                                             <p className="card-category color--white text-center">Total News</p>
-                                            <Card.Title as="h1" className={"color--white text-center"}>{countNewsList.length}</Card.Title>
+                                            <Card.Title as="h1"
+                                                        className={"color--white text-center"}>{countNewsList.length}</Card.Title>
                                         </div>
                                     </Col>
                                 </Row>
@@ -109,78 +192,22 @@ function Dashboard() {
                     </Col>
                 </Row>
                 <Row>
-                    <Col lg="6"  sm="6">
+                    <Col lg="6" sm="6">
                         <Container>
-                            <div style={divSmallBox}/>
-                            <Table striped bordered hover variant='dark'>
-                                <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Name</th>
-                                    <th>Code</th>
-                                    <th>Description</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {
-                                    coinsList.length === 0 ?
-                                        <tr>
-                                            <td>{'Data Not Available!'}</td>
-                                            <td>{'Data Not Available!'}</td>
-                                            <td>{'Data Not Available!'}</td>
-                                            <td>{'Data Not Available!'}</td>
-                                        </tr>
-                                        :
-                                        coinsList.map((coin, key) => (
-                                            <tr key={coin._id.$oid}>
-                                                <td>{countCoins++}</td>
-                                                <td>{coin.name}</td>
-                                                <td>{coin.code}</td>
-                                                <td>{coin.description}</td>
-                                            </tr>
-                                        ))
-                                }
-                                </tbody>
-                            </Table>
+                            <div style={divForPieChart}>
+                                <div style={divSmallBox}/>
+                                <div style={{width: "300px", height: "300px"}}>
+                                    <Pie data={dataForCoins}/>
+                                </div>
+                            </div>
                         </Container>
                     </Col>
-                    <Col lg="6"  sm="6">
+                    <Col lg="6" sm="6">
                         <Container>
                             <div style={divSmallBox}/>
-                            <Table striped bordered hover variant='dark'>
-                                <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Author</th>
-                                    <th>Title</th>
-                                    <th>Description</th>
-                                    <th>Date</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {
-                                    newsList.length === 0 ?
-                                        <tr>
-                                            <td>{'Data Not Available!'}</td>
-                                            <td>{'Data Not Available!'}</td>
-                                            <td>{'Data Not Available!'}</td>
-                                            <td>{'Data Not Available!'}</td>
-                                            <td>{'Data Not Available!'}</td>
-                                        </tr>
-                                        :
-                                        newsList.map((news, key) => (
-
-                                            <tr key={news._id.$oid}>
-                                                <td>{countNews++}</td>
-                                                <td>{news.author}</td>
-                                                <td>{news.title}</td>
-                                                <td>{news.description}</td>
-                                                <td>{news.date.$date}</td>
-                                            </tr>
-                                        ))
-                                }
-                                </tbody>
-                            </Table>
+                            <div>
+                                <Bar options={options} data={dataForNews}/>
+                            </div>
                         </Container>
                     </Col>
                 </Row>

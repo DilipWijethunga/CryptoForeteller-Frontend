@@ -5,6 +5,7 @@ import Navbar from "../dashboard/sidebar/Navbar";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CurrencyDetailsService from "../../services/CurrencyDetailsService";
+import CommonAuthCheck from "../../services/CommonAuthCheck";
 
 // TODO: Validating registration form fields
 const requiredField = data => {
@@ -43,7 +44,7 @@ function AddCoin(props) {
 
         CurrencyDetailsService.createCurrency(data)
             .then(response => {
-                setMessage(response.data);
+                setMessage(response.data.data);
                 setLoading(false);
                 window.location.replace("/coins-list");
             })
@@ -153,4 +154,4 @@ function AddCoin(props) {
     );
 }
 
-export default AddCoin;
+export default CommonAuthCheck(AddCoin);

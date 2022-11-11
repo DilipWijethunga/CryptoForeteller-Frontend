@@ -15,7 +15,6 @@ const BlogcontentTwo = () => {
           .then(response => response.data)
           .then((data) => {
             setNewsList(data);
-            console.log(data);
           }).catch(error => console.log(error.message));
     }
     dataFetch();

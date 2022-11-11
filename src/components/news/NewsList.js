@@ -6,6 +6,7 @@ import NewsService from "../../services/NewsService";
 import Connection from "../../services/connection.json";
 
 import Modal from "react-bootstrap/Modal";
+import CommonAuthCheck from "../../services/CommonAuthCheck";
 
 const FLASK_API = Connection.localAddress + '/news';
 
@@ -38,9 +39,7 @@ function NewsList(props) {
     const handleDelete = async (id) => {
         await NewsService.deleteNewsById(id)
             .then(response => response.data)
-            .then((data) => {
-                console.log(data)
-            }).catch(error => {
+            .catch(error => {
                 console.log(error.message);
             });
     }
@@ -57,9 +56,7 @@ function NewsList(props) {
     const onClickNewsDelete = (id) => {
             setShow(true);
             handleDelete(id);
-            setTimeout(() => {
-                window.location.reload();
-            }, 2000);
+            window.location.reload();
     }
 
     return (
@@ -84,6 +81,7 @@ function NewsList(props) {
                 </Modal.Footer>
             </Modal>
             <div style={divBox}/>
+            <h2 className="text-center"><mark>All News Details</mark></h2>
             <Container>
                 <div >
                     <Link to={`/add-news`} className={'btn btn-success text-white'}>Add a News</Link>
@@ -123,7 +121,7 @@ function NewsList(props) {
                                     <td>{news.title}</td>
                                     <td>{news.description}</td>
                                     <td>{news.date.$date}</td>
-                                    <td>{news.image}</td>
+                                    <td>{(news.image).substring(0,30)}...</td>
                                     <td><Link to={{
                                         pathname: process.env.PUBLIC_URL + '/edit-news',
                                         state: {
@@ -134,10 +132,10 @@ function NewsList(props) {
                                             newsAuthor: news.author
                                         }
                                     }}
-                                              className={'btn btn-primary'}>Edit</Link>
+                                              className={'btn text-white btn-primary'}>Edit</Link>
                                     </td>
                                     <td>
-                                        <Link onClick={()=> handleShow(news._id.$oid)}    className={'btn btn-danger'}>Delete</Link>
+                                        <Link onClick={()=> handleShow(news._id.$oid)}    className={'btn text-white btn-danger'}>Delete</Link>
                                     </td>
                                 </tr>
                             ))
@@ -150,4 +148,4 @@ function NewsList(props) {
     );
 }
 
-export default NewsList;
+export default CommonAuthCheck(NewsList);

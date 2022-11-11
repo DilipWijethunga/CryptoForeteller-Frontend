@@ -37,11 +37,11 @@ const Header = ({ theme }) => {
               }
             />
           </div>
-          <div className="col-lg-7 col-xl-8 d-none d-lg-block">
+          <div className="col-lg-5 col-xl-5 d-none d-lg-block">
             {/* navigation */}
             <Navigation />
           </div>
-          <div className="col-lg-3 col-xl-2 col-6">
+          <div className="col-lg-5 col-xl-5 col-6">
             {/* header buttons */}
             <HeaderBtn />
           </div>
