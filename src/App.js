@@ -19,6 +19,7 @@ import Foreteller from "./pages/Foreteller";
 import CustomerDashboardHome from "./pages/CustomerDashboardHome";
 import UsersList from "./components/dashboard/admin/UsersList";
 import CustomerProfile from "./components/customer/CustomerProfile";
+import BlogPost from "./pages/BlogPost";
 
 function App() {
     return (
@@ -97,6 +98,10 @@ function App() {
                     <Route
                         path={`${process.env.PUBLIC_URL + "/customer-profile"}`}
                         component={CustomerProfile}
+                    />
+                    <Route
+                         path={`${process.env.PUBLIC_URL + "/news-details/:id"}`}
+                         component={BlogPost}
                     />
                     <Route exact component={NotFound}/>
                 </Switch>
